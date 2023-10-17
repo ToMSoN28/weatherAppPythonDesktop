@@ -1,11 +1,15 @@
-import datetime as dt
 import requests
+import json
+from dataclasses_json import dataclass_json
+from Models.city import City
+from Models.country import Country
+from Models.administrativeArea import AdministrativeArea
 
 BASE_URL = "http://dataservice.accuweather.com"
 # API_KEY = "L9CE93Lw6aehXlK1FZeE0V7AFRbUstbR"
 API_KEY = "qCtdDGd8DAGrbJPFRF6u1Hn1EAN09WTb"
 
-CITY = "warszawa"
+CITY = "sopot"
 LANGUAGE = "en"
 
 AUTOCOMPLITE_ENDPOINT = "/locations/v1/cities/autocomplete"
@@ -23,22 +27,31 @@ def fToC(value):
 def getCityKey(city):
     url = BASE_URL + AUTOCOMPLITE_ENDPOINT + "?apikey=" + API_KEY + "&q=" + city + "&language=" + LANGUAGE
     response = requests.get(url).json()
+    print(response)
+    for city_data in response:
+        city_back = City(**city_data)
+        print(city_back.LocalizedName)
+    # return city_back
     return response[0]['Key'],response[0]['LocalizedName']
 
+# testy = getCityKey(CITY)
 
 def getCurrentCondition(cityKey):
     url = BASE_URL + CURRENT_CONDITIONS_ENDPOINT +"/"+ cityKey + "?apikey=" + API_KEY + "&language=" + LANGUAGE
     response = requests.get(url).json()
+    print(response)
     return response[0]['WeatherText'], fToC(response[0]['Temperature']['Metric']['Value'])
 
 def getOneHourForecast(cityKey):
     url = BASE_URL + ONE_HOUR_FORECAST_ENDPOINT + "/" + cityKey + "?apikey=" + API_KEY + "&language=" + LANGUAGE
     response = requests.get(url).json()
+    print(response)
     return response[0]["IconPhrase"], fToC(response[0]["Temperature"]["Value"])
 
 def getOneDayForecast(cityKey):
     url = BASE_URL + ONE_DAY_FORECASTS_ENDPOINT + "/" + cityKey + "?apikey=" + API_KEY + "&language=" + LANGUAGE
     response = requests.get(url).json()
+    print(response)
     miniValue = response["DailyForecasts"][0]["Temperature"]["Minimum"]["Value"]
     maxiValue = response["DailyForecasts"][0]["Temperature"]["Maximum"]["Value"]
     return fToC(miniValue), fToC(maxiValue), response["DailyForecasts"][0]["Day"]["IconPhrase"], response["DailyForecasts"][0]["Night"]["IconPhrase"]
@@ -46,6 +59,7 @@ def getOneDayForecast(cityKey):
 def getFiveDayForecast(cityKey, cityName):
     url = BASE_URL + FIVE_DAY_FORECAST_ENDPOINT + "/" + cityKey + "?apikey=" + API_KEY + "&language=" + LANGUAGE
     response = requests.get(url).json()
+    print(response)
 
     minTemperatures = []
     maxTemperatures = []
@@ -72,6 +86,7 @@ def getFiveDayForecast(cityKey, cityName):
 def getTwelfHourForecast(cityKey, CityName):
     url = BASE_URL + TWELF_HOUR_RORECAS_ENDPOIT + "/" + cityKey + "?apikey=" + API_KEY + "&language=" + LANGUAGE
     response = requests.get(url).json()
+    print(response)
     iconPhrases = []
     temperatures = []
     numbers = ["First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth", "Eleventh", "Twelfth"]

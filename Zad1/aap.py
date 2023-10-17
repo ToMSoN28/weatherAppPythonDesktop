@@ -78,7 +78,7 @@ entry.pack(pady=12, padx=10)
 
 optionMenu = customtkinter.CTkOptionMenu(master=frame, values=optionsToChoos, variable=selectedOption)
 optionMenu.pack(pady=12, padx=10)
-# optionMenu.set("time")
+optionMenu.set("choos option type")
 
 applyButton = customtkinter.CTkButton(master=frame, text="Apply", command=apply)
 applyButton.pack(pady=12, padx=10)
