@@ -1,13 +1,13 @@
 import requests
-import json
-from dataclasses_json import dataclass_json
 from Models.city import City
-from Models.country import Country
-from Models.administrativeArea import AdministrativeArea
+from Models.currentWeather import CurrentWeather
+from Models.hour import HourWeather
+from Models.dayli import Dayli
 
 BASE_URL = "http://dataservice.accuweather.com"
 # API_KEY = "L9CE93Lw6aehXlK1FZeE0V7AFRbUstbR"
-API_KEY = "qCtdDGd8DAGrbJPFRF6u1Hn1EAN09WTb"
+# API_KEY = "qCtdDGd8DAGrbJPFRF6u1Hn1EAN09WTb"
+API_KEY = "fczx5bWlQev7L9f8AKB5FXRike7Y31Xw"
 
 CITY = "sopot"
 LANGUAGE = "en"
@@ -28,11 +28,13 @@ def getCityKey(city):
     url = BASE_URL + AUTOCOMPLITE_ENDPOINT + "?apikey=" + API_KEY + "&q=" + city + "&language=" + LANGUAGE
     response = requests.get(url).json()
     print(response)
+    city_models = []
     for city_data in response:
         city_back = City(**city_data)
-        print(city_back.LocalizedName)
+        city_models.append(city_back)
+        print(city_back.Country.LocalizedName)
     # return city_back
-    return response[0]['Key'],response[0]['LocalizedName']
+    return city_models[0].Key,response[0]['LocalizedName']
 
 # testy = getCityKey(CITY)
 
@@ -40,18 +42,23 @@ def getCurrentCondition(cityKey):
     url = BASE_URL + CURRENT_CONDITIONS_ENDPOINT +"/"+ cityKey + "?apikey=" + API_KEY + "&language=" + LANGUAGE
     response = requests.get(url).json()
     print(response)
+    currentWeather_model = CurrentWeather(**response[0])
+    print(currentWeather_model.Temperature.Metric.Value)
     return response[0]['WeatherText'], fToC(response[0]['Temperature']['Metric']['Value'])
 
 def getOneHourForecast(cityKey):
     url = BASE_URL + ONE_HOUR_FORECAST_ENDPOINT + "/" + cityKey + "?apikey=" + API_KEY + "&language=" + LANGUAGE
     response = requests.get(url).json()
-    print(response)
+    hour_model = HourWeather(**response[0])
+    print(hour_model.Temperature.Value)
     return response[0]["IconPhrase"], fToC(response[0]["Temperature"]["Value"])
 
 def getOneDayForecast(cityKey):
     url = BASE_URL + ONE_DAY_FORECASTS_ENDPOINT + "/" + cityKey + "?apikey=" + API_KEY + "&language=" + LANGUAGE
     response = requests.get(url).json()
     print(response)
+    dayli_model = Dayli(**response)
+    print(dayli_model.DailyForecasts[0].Temperature.Maximum.Value)
     miniValue = response["DailyForecasts"][0]["Temperature"]["Minimum"]["Value"]
     maxiValue = response["DailyForecasts"][0]["Temperature"]["Maximum"]["Value"]
     return fToC(miniValue), fToC(maxiValue), response["DailyForecasts"][0]["Day"]["IconPhrase"], response["DailyForecasts"][0]["Night"]["IconPhrase"]
@@ -60,7 +67,8 @@ def getFiveDayForecast(cityKey, cityName):
     url = BASE_URL + FIVE_DAY_FORECAST_ENDPOINT + "/" + cityKey + "?apikey=" + API_KEY + "&language=" + LANGUAGE
     response = requests.get(url).json()
     print(response)
-
+    dayli_model = Dayli(**response)
+    print(dayli_model.DailyForecasts[4].Temperature.Maximum.Value)
     minTemperatures = []
     maxTemperatures = []
     dayIcons = []
@@ -87,6 +95,15 @@ def getTwelfHourForecast(cityKey, CityName):
     url = BASE_URL + TWELF_HOUR_RORECAS_ENDPOIT + "/" + cityKey + "?apikey=" + API_KEY + "&language=" + LANGUAGE
     response = requests.get(url).json()
     print(response)
+    hour_models = []
+    for model in response:
+        hour_model = HourWeather(**model)
+        hour_models.append(hour_model)
+        print(hour_model.Temperature.Value)
+    hourWeather = []
+    for hour_data in response:
+        hourWeather.append(HourWeather(**hour_data))
+    print(hourWeather[11].Temperature.Value)
     iconPhrases = []
     temperatures = []
     numbers = ["First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth", "Eleventh", "Twelfth"]

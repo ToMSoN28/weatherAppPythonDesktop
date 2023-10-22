@@ -8,11 +8,17 @@ class HourWeather:
     WeatherIcon: int
     IconPhrase: str
     HasPrecipitation: bool
-    IsDaylight: bool
     Temperature: TempDetails
     PrecipitationProbability: str
     MobileLink: str
     Link: str
+    PrecipitationType: str = ""
+    PrecipitationIntensity: str = ""
+    IsDaylight: bool = False
+    print("init")
 
-    def __post__init__(self):
-        self.Temperature = TempDetails(**self.Temperature)
+    def __post_init__(self):
+        print("post init")
+        if isinstance(self.Temperature, dict):
+            print("hour TempDiteils")
+            self.Temperature = TempDetails(**self.Temperature)

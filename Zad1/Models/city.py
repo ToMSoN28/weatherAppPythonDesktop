@@ -13,6 +13,8 @@ class City:
     Country: Country
     AdministrativeArea: AdministrativeArea
 
-    def __post__init__(self):
-        self.Country = Country(**self.Country)
-        self.AdministrativeArea = AdministrativeArea(**self.AdministrativeArea)
+    def __post_init__(self):
+        if isinstance(self.Country, dict):
+            self.Country = Country(**self.Country)
+        if isinstance(self.AdministrativeArea, dict):
+            self.AdministrativeArea = AdministrativeArea(**self.AdministrativeArea)

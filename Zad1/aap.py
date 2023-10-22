@@ -61,7 +61,7 @@ def apply():
 
 root = customtkinter.CTk()
 root.title("Weather App")
-root.geometry("400x680")
+root.geometry("400x350")
 
 optionsToChoos = ["current weather","weather in an hour", "tomorrow weather", "five day forecast", "twelf hour forecast"]
 selectedOption = customtkinter.StringVar()

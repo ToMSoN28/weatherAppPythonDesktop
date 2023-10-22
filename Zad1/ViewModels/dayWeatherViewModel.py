@@ -17,7 +17,7 @@ class DailyForecastViewModel:
         self.Day = dayliForecast.Day.IconPhrase
         self.Night = dayliForecast.Night.IconPhrase
     
-    def fToC(value):
+    def fToC(self, value):
         tmp = (value-32)*5/9
         tmp = round(tmp, 1)
         return tmp

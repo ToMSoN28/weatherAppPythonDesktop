@@ -10,12 +10,18 @@ class DailyForecasts:
     Temperature: Temperature
     Day: Day
     Night: Day
-    Source: List[str]
+    Sources: List[str]
     MobileLink: str
     Link: str
 
-    def __post__init__(self):
-        self.Temperature = Temperature(**self.Temperature)
-        self.Day = Day(**self.Day)
-        self.Night = Day(**self.Night)
-        self.Source = [str(**source) for source in self.Source]
+    def __post_init__(self):
+        if isinstance(self.Temperature, dict):
+            self.Temperature = Temperature(**self.Temperature)
+        if isinstance(self.Day, dict):
+            self.Day = Day(**self.Day)
+        if isinstance(self.Night, dict):
+            self.Night = Day(**self.Night)
+        if isinstance(self.Sources, list):
+            for i, itm in enumerate(self.Sources):
+                if isinstance(itm, dict):
+                    self.Sources[i] = str(**itm)

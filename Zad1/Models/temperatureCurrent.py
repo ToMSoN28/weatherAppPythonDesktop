@@ -6,6 +6,8 @@ class Temperature:
     Metric: TempDetails
     Imperial: TempDetails
 
-    def __post__init__(self):
-        self.Metric = TempDetails(**self.Metric)
-        self,Imperial = TempDetails(**self.Imperial)
+    def __post_init__(self):
+        if isinstance(self.Metric, dict):
+            self.Metric = TempDetails(**self.Metric)
+        if isinstance(self.Imperial, dict):
+            self.Imperial = TempDetails(**self.Imperial)

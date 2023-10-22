@@ -6,6 +6,8 @@ class Temperature:
     Minimum: TempDetails
     Maximum: TempDetails
 
-    def __post__init__(self):
-        self.Minimum = TempDetails(**self.Minimum)
-        self.Maximum = TempDetails(**self.Maximum)
+    def __post_init__(self):
+        if isinstance(self.Minimum, dict):
+            self.Minimum = TempDetails(**self.Minimum)
+        if isinstance(self.Maximum, dict):
+            self.Maximum = TempDetails(**self.Maximum)

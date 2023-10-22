@@ -14,5 +14,6 @@ class CurrentWeather:
     MobileLink: str
     Link: str
 
-    def __post__init__(self):
-        self.Temperature = Temperature(**self.Temperature)
+    def __post_init__(self):
+        if isinstance(self.Temperature, dict):
+            self.Temperature = Temperature(**self.Temperature)

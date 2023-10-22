@@ -5,4 +5,6 @@ class Day:
     Icon: int
     IconPhrase: str
     HasPrecipitation: bool
+    PrecipitationType: str = ""
+    PrecipitationIntensity:str = ""
     
