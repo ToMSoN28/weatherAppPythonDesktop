@@ -1,5 +1,4 @@
 import customtkinter
-# import tkinter as tk
 from collections import OrderedDict
 
 from .cityViewModel import CityViewModel
@@ -10,9 +9,6 @@ import Services.accuWeatherService as fun
 
 class MainViewModel:
     def __init__(self, accuWeatherService):
-        # self.cityString = customtkinter.StringVar()
-        # self.selectedCityString = customtkinter.StringVar()
-        # self.selectedOptionString = customtkinter.StringVar()
         self.citySearched = None
         self.selectedCity = None
         self.weather = None
@@ -25,35 +21,10 @@ class MainViewModel:
 
         self.accuWeatherService = accuWeatherService
         self.view = None
-        # self.root = root
         self.Cities = []
         self.optionsToChoos = ["current weather","weather in an hour", "tomorrow weather", "five day forecast", "twelf hour forecast"]
 
-    
-    @property
-    def city(self):
-        return self.cityString.get()
-    
-    @city.setter
-    def city(self, value):
-        self.cityString.set(value)
-
-    @property
-    def selectedCity(self):
-        return self.selectedCityString
-    
-    @selectedCity.setter
-    def selectedCity(self, value):
-        self.selectedCityString = value
-
-    @property
-    def selectedOption(self):
-        return self.selectedOptionString
-    
-    @selectedOption.setter
-    def selectedOption(self, value):
-        self.selectedOptionString = value
-
+    # Szereg funkcji pobierających dane z AccuWeather i tworzących ViewModele z Modeli
     def currentString(self):
         weather = self.accuWeatherService.getCurrentCondition(self.selectedCity.Key)
         self.weather = CurrentWeatherViewModel(weather)
@@ -75,7 +46,6 @@ class MainViewModel:
     def fiveDaysString(self):
         self.weatherL.clear()
         weather = self.accuWeatherService.getFiveDayForecast(self.selectedCity.Key)
-        # self.weatherL = DailyForecastViewModel(weather)
         string = ""
         dayList = ["Tomorrow in ", "In two days in ", "In three days in ", "In four days in ", "In five days in "]
         for dailyM in weather:
@@ -95,23 +65,21 @@ class MainViewModel:
             string += numbers[i]+" hour in "+self.selectedCity.LocalizedName+" will be "+hour.Describe+" and "+str(hour.Temp)+" degrees.\n"
         return string
 
+    # Funkcja przycisku z GUI
     def search(self):
         self.citySearched = self.view.cityString.get()
-        # print(self.citySearched)
         citis = self.accuWeatherService.getCitis(self.citySearched)
         self.Cities.clear()
         for cityObj in citis:
-            # print(cityObj.LocalizedName)
             self.Cities.append(CityViewModel(cityObj))
         self.view.cityOptionMenu.configure(values = [city.LocalizedName for  city in self.Cities])        
 
+    # Funkcja przycisku z GUI i wyświetlająca odpowiedni takst.
     def apply(self):
-        print(self.view.selectedCityString.get())
         for city in self.Cities:
             if self.view.selectedCityString.get() == city.LocalizedName:
                 self.selectedCity = city
         self.selectedOption = self.view.selectedOptionString.get()
-        print("dupa "+self.selectedOption)
         switch = {
             self.optionsToChoos[0]: self.currentString,
             self.optionsToChoos[1]: self.oneHourString,

@@ -22,6 +22,7 @@ class AccuWeatherService:
         self.FIVE_DAY_FORECAST_ENDPOINT = "/forecasts/v1/daily/5day"
         self.TWELF_HOUR_RORECAS_ENDPOIT = "/forecasts/v1/hourly/12hour"
 
+    # Funkcje pobierania informacji z AccuWeather i tworzących modele
     def getCitis(self, lokacionName):
         url = self.BASE_URL + self.AUTOCOMPLITE_ENDPOINT + "?apikey=" + self.API_KEY + "&q=" + lokacionName + "&language=" + self.LANGUAGE
         response = requests.get(url).json()
@@ -33,7 +34,6 @@ class AccuWeatherService:
     def getCurrentCondition(self, cityKey):
          url = self.BASE_URL + self.CURRENT_CONDITIONS_ENDPOINT +"/"+ cityKey + "?apikey=" + self.API_KEY + "&language=" + self.LANGUAGE
          response = requests.get(url).json()
-         print(response)
          currentWeather_model = CurrentWeather(**response[0])
          return currentWeather_model
     
@@ -41,30 +41,25 @@ class AccuWeatherService:
     def getOneHourForecast(self, cityKey):
         url = self.BASE_URL + self.ONE_HOUR_FORECAST_ENDPOINT + "/" + cityKey + "?apikey=" + self.API_KEY + "&language=" + self.LANGUAGE
         response = requests.get(url).json()
-        print(response)
-        print("service")
+
         hour_model = HourWeather(**response[0])
-        print("service1")
         return hour_model
     
     def getOneDayForecast(self, cityKey):
         url = self.BASE_URL + self.ONE_DAY_FORECASTS_ENDPOINT + "/" + cityKey + "?apikey=" + self.API_KEY + "&language=" + self.LANGUAGE
         response = requests.get(url).json()
-        print(response)
         dayli_model = Dayli(**response)
         return dayli_model.DailyForecasts[0]
 
     def getFiveDayForecast(self, cityKey):
         url = self.BASE_URL + self.FIVE_DAY_FORECAST_ENDPOINT + "/" + cityKey + "?apikey=" + self.API_KEY + "&language=" + self.LANGUAGE
         response = requests.get(url).json()
-        print(response)
         dayli_model = Dayli(**response)
         return dayli_model.DailyForecasts
 
     def getTwelfHourForacast(self, cityKey):
         url = self.BASE_URL + self.TWELF_HOUR_RORECAS_ENDPOIT + "/" + cityKey + "?apikey=" + self.API_KEY + "&language=" + self.LANGUAGE
         response = requests.get(url).json()
-        print(response)
         hourWeather = []
         for hour_data in response:
             hourWeather.append(HourWeather(**hour_data))

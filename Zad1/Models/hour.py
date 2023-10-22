@@ -15,10 +15,7 @@ class HourWeather:
     PrecipitationType: str = ""
     PrecipitationIntensity: str = ""
     IsDaylight: bool = False
-    print("init")
 
     def __post_init__(self):
-        print("post init")
         if isinstance(self.Temperature, dict):
-            print("hour TempDiteils")
             self.Temperature = TempDetails(**self.Temperature)

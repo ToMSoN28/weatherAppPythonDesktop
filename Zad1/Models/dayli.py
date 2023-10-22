@@ -9,13 +9,9 @@ class Dayli:
     DailyForecasts: List[DailyForecasts]
 
     def __post_init__(self):
-        print("sex")
         if isinstance(self.Headline, dict):
             self.Headline = HeadLine(**self.Headline)
-            print("cycki")
         if isinstance(self.DailyForecasts, list):
-            print("dupaDUPAdupa")
             for i, item in enumerate(self.DailyForecasts):
                 if isinstance(item, dict):
                     self.DailyForecasts[i] = DailyForecasts(**item)
-                    print("chuj")
